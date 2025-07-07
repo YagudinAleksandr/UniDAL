@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "UniDAL.Playground": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
