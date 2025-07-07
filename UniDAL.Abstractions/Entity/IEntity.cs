@@ -1,9 +1,9 @@
-﻿namespace UniDAL.Core
+﻿namespace UniDAL.Abstractions
 {
     /// <summary>
-    /// Интерфейс сущности
+    /// Базовый интерфейс сущности
     /// </summary>
-    /// <typeparam name="TKeyType">Тип ИД ключа</typeparam>
+    /// <typeparam name="TKeyType">Тип ИД</typeparam>
     public interface IEntity<TKeyType>
     {
         /// <summary>
