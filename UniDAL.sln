@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36212.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDAL.Abstractions", "UniDAL.Abstractions\UniDAL.Abstractions.csproj", "{D2B5E906-8CC9-49F4-B9EE-06E99858E8AA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDAL.Core", "UniDAL.Core\UniDAL.Core.csproj", "{6FF3536F-A91E-461C-AAB9-9FE43B711012}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDAL.SQL.Abstractions", "UniDAL.SQL.Abstractions\UniDAL.SQL.Abstractions.csproj", "{F4994744-A7C8-417D-B765-0A968990C509}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDAL.SQL.Core", "UniDAL.SQL.Core\UniDAL.SQL.Core.csproj", "{E89010BC-7065-4F96-8A24-04F580E4C958}"
@@ -17,14 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D2B5E906-8CC9-49F4-B9EE-06E99858E8AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2B5E906-8CC9-49F4-B9EE-06E99858E8AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2B5E906-8CC9-49F4-B9EE-06E99858E8AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2B5E906-8CC9-49F4-B9EE-06E99858E8AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6FF3536F-A91E-461C-AAB9-9FE43B711012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6FF3536F-A91E-461C-AAB9-9FE43B711012}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6FF3536F-A91E-461C-AAB9-9FE43B711012}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6FF3536F-A91E-461C-AAB9-9FE43B711012}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4994744-A7C8-417D-B765-0A968990C509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F4994744-A7C8-417D-B765-0A968990C509}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4994744-A7C8-417D-B765-0A968990C509}.Release|Any CPU.ActiveCfg = Release|Any CPU
