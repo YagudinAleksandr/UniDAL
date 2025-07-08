@@ -13,11 +13,6 @@
         /// <summary>
         /// PostgreSQL сервер
         /// </summary>
-        PostgreSQL,
-
-        /// <summary>
-        /// MySQL сервер
-        /// </summary>
-        MySQL
+        PostgreSQL
     }
 }
