@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDAL.Abstractions", "UniD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDAL.Core", "UniDAL.Core\UniDAL.Core.csproj", "{6FF3536F-A91E-461C-AAB9-9FE43B711012}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniDAL.SQL.Abstractions", "UniDAL.SQL.Abstractions\UniDAL.SQL.Abstractions.csproj", "{F4994744-A7C8-417D-B765-0A968990C509}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6FF3536F-A91E-461C-AAB9-9FE43B711012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FF3536F-A91E-461C-AAB9-9FE43B711012}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FF3536F-A91E-461C-AAB9-9FE43B711012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4994744-A7C8-417D-B765-0A968990C509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4994744-A7C8-417D-B765-0A968990C509}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4994744-A7C8-417D-B765-0A968990C509}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4994744-A7C8-417D-B765-0A968990C509}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
