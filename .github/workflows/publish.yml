@@ -3,7 +3,7 @@
 on:
   push:
     tags:
-      - '*.*.*'
+      - '*'  # Триггер на любые теги
 
 jobs:
   publish:
@@ -24,6 +24,18 @@ jobs:
     - name: Clean artifacts
       run: rm -rf ./artifacts && mkdir -p ./artifacts
         
+    - name: Extract version from tag
+      id: extract-version
+      run: |
+        # Обрабатываем теги с префиксом v и без
+        if [[ $GITHUB_REF == refs/tags/v* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        else
+          VERSION=${GITHUB_REF#refs/tags/}
+        fi
+        echo "Extracted version: $VERSION"
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        
     - name: Find project paths
       id: find-projects
       run: |
@@ -36,24 +48,22 @@ jobs:
         
     - name: Pack Abstractions
       run: |
-        VERSION=${GITHUB_REF#refs/tags/v}
-        echo "Packing Abstractions version $VERSION"
+        echo "Packing Abstractions version ${{ steps.extract-version.outputs.VERSION }}"
         cd "${{ steps.find-projects.outputs.ABSTR_PATH }}"
         dotnet pack \
           --configuration Release \
-          -p:PackageVersion=$VERSION \
-          -p:Version=$VERSION \
+          -p:PackageVersion=${{ steps.extract-version.outputs.VERSION }} \
+          -p:Version=${{ steps.extract-version.outputs.VERSION }} \
           --output ../../artifacts
         
     - name: Pack Core
       run: |
-        VERSION=${GITHUB_REF#refs/tags/v}
-        echo "Packing Core version $VERSION"
+        echo "Packing Core version ${{ steps.extract-version.outputs.VERSION }}"
         cd "${{ steps.find-projects.outputs.CORE_PATH }}"
         dotnet pack \
           --configuration Release \
-          -p:PackageVersion=$VERSION \
-          -p:Version=$VERSION \
+          -p:PackageVersion=${{ steps.extract-version.outputs.VERSION }} \
+          -p:Version=${{ steps.extract-version.outputs.VERSION }} \
           --output ../../artifacts
 
     - name: Verify artifacts
