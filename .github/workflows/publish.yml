@@ -6,8 +6,8 @@ on:
       - 'v*.*.*'  # Триггер на теги вида v1.0.0
 
 env:
-  NUGET_PACKAGE_NAME_ABSTR: UnitDAL.SQL.Abstractions
-  NUGET_PACKAGE_NAME_CORE: UnitDAL.SQL.Core
+  NUGET_PACKAGE_NAME_ABSTR: UniDAL.SQL.Abstractions
+  NUGET_PACKAGE_NAME_CORE: UniDAL.SQL.Core
   GITHUB_OWNER: YagudinAleksandr
 
 jobs:

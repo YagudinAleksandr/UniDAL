@@ -1,21 +1,21 @@
 ﻿# UniDAL
 
 ## Описание
-UnitDAL.SQL предоставляет унифицированный интерфейс для работы с различными реляционными БД (PostgreSQL, SQL Server, MySQL) через Entity Framework Core. Библиотека состоит из двух пакетов:
-- UnitDAL.SQL.Abstractions - содержит интерфейсы и конфигурации
-- UnitDAL.SQL.Core - реализация функционала
+UniDAL.SQL предоставляет унифицированный интерфейс для работы с различными реляционными БД (PostgreSQL, SQL Server, MySQL) через Entity Framework Core. Библиотека состоит из двух пакетов:
+- UniDAL.SQL.Abstractions - содержит интерфейсы и конфигурации
+- UniDAL.SQL.Core - реализация функционала
 
 ### Установка UniDAL.SQL
 ```bash
-dotnet add package UnitDAL.SQL.Abstractions
-dotnet add package UnitDAL.Core
+dotnet add package UniDAL.SQL.Abstractions
+dotnet add package UniDAL.Core
 ```
 
 Или через NuGet Package Manager:
 
 ```bash
-Install-Package UnitDAL.SQL.Abstractions
-Install-Package UnitDAL.Core
+Install-Package UniDAL.SQL.Abstractions
+Install-Package UniDAL.Core
 ```
 
 #### Настройка
@@ -41,7 +41,7 @@ Install-Package UnitDAL.Core
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddUnitDAL(Configuration);
+    services.AddUniDAL(Configuration);
     
     // Регистрация контекстов
     services.AddScoped<AppDbContext>();
