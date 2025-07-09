@@ -3,7 +3,7 @@
 on:
   push:
     tags:
-      - '*'  # Триггер на любые теги
+      - '*'
 
 jobs:
   publish:
@@ -11,71 +11,51 @@ jobs:
     permissions:
       contents: read
       packages: write
-      
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
+    - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
-        
-    - name: Clean artifacts
-      run: rm -rf ./artifacts && mkdir -p ./artifacts
-        
-    - name: Extract version from tag
-      id: extract-version
+
+    - name: Clean and prepare
       run: |
-        # Обрабатываем теги с префиксом v и без
-        if [[ $GITHUB_REF == refs/tags/v* ]]; then
-          VERSION=${GITHUB_REF#refs/tags/v}
-        else
-          VERSION=${GITHUB_REF#refs/tags/}
-        fi
-        echo "Extracted version: $VERSION"
+        mkdir -p ./artifacts
+        rm -rf ./artifacts/*
+
+    - name: Extract version
+      id: version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/}
+        VERSION=${VERSION#v}  # Удаляем v если есть
+        echo "Version: $VERSION"
         echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-        
-    - name: Find project paths
-      id: find-projects
+
+    - name: Find and pack projects
       run: |
-        ABSTR_PATH=$(find . -name "UniDAL.SQL.Abstractions.csproj" -o -name "UnitDAL.SQL.Abstractions.csproj" | head -n 1 | xargs dirname)
-        CORE_PATH=$(find . -name "UniDAL.SQL.Core.csproj" -o -name "UnitDAL.SQL.Core.csproj" | head -n 1 | xargs dirname)
-        echo "ABSTR_PATH=$ABSTR_PATH" >> $GITHUB_OUTPUT
-        echo "CORE_PATH=$CORE_PATH" >> $GITHUB_OUTPUT
-        echo "Found Abstractions at: $ABSTR_PATH"
-        echo "Found Core at: $CORE_PATH"
-        
-    - name: Pack Abstractions
-      run: |
-        echo "Packing Abstractions version ${{ steps.extract-version.outputs.VERSION }}"
-        cd "${{ steps.find-projects.outputs.ABSTR_PATH }}"
-        dotnet pack \
-          --configuration Release \
-          -p:PackageVersion=${{ steps.extract-version.outputs.VERSION }} \
-          -p:Version=${{ steps.extract-version.outputs.VERSION }} \
-          --output ../../artifacts
-        
-    - name: Pack Core
-      run: |
-        echo "Packing Core version ${{ steps.extract-version.outputs.VERSION }}"
-        cd "${{ steps.find-projects.outputs.CORE_PATH }}"
-        dotnet pack \
-          --configuration Release \
-          -p:PackageVersion=${{ steps.extract-version.outputs.VERSION }} \
-          -p:Version=${{ steps.extract-version.outputs.VERSION }} \
-          --output ../../artifacts
+        for PROJ in $(find . -name "*.csproj" | grep -E "Abstractions|Core"); do
+          echo "Packing $PROJ"
+          dotnet pack $PROJ \
+            --configuration Release \
+            -p:PackageVersion=${{ steps.version.outputs.VERSION }} \
+            -p:Version=${{ steps.version.outputs.VERSION }} \
+            --output $(pwd)/artifacts
+        done
 
     - name: Verify artifacts
       run: |
-        echo "Artifacts directory contents:"
+        echo "Artifacts:"
         ls -la ./artifacts/
-        echo "Nupkg files:"
-        find ./artifacts -name "*.nupkg"
-        
-    - name: Publish to GitHub Packages
+        [ "$(ls -A ./artifacts)" ] || exit 1
+
+    - name: Publish packages
       run: |
-        dotnet nuget push ./artifacts/*.nupkg \
-          --skip-duplicate \
-          --api-key ${{ secrets.GITHUB_TOKEN }} \
-          --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        for PKG in ./artifacts/*.nupkg; do
+          echo "Publishing $PKG"
+          dotnet nuget push $PKG \
+            --skip-duplicate \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        done
