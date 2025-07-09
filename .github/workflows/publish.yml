@@ -1,24 +1,51 @@
-﻿name: Publish to NuGet
+﻿name: Publish to GitHub Packages
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - 'v*.*.*'  # Триггер на теги вида v1.0.0
+
+env:
+  NUGET_PACKAGE_NAME_ABSTR: UnitDAL.SQL.Abstractions
+  NUGET_PACKAGE_NAME_CORE: UnitDAL.SQL.Core
+  GITHUB_OWNER: YagudinAleksandr
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      packages: write
+      
     steps:
-    - uses: actions/checkout@v2
-    
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 8.0.x
-    
-    - name: Build and pack
-      run: |
-        dotnet pack -c Release -p:PackageVersion=${{ github.ref_name }}
+        dotnet-version: '8.0.x'
         
-    - name: Publish to NuGet
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Run tests
+      run: dotnet test --configuration Release --no-build --verbosity normal
+      
+    - name: Pack
       run: |
-        dotnet nuget push **/*.nupkg --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        cd src/${{ env.NUGET_PACKAGE_NAME_ABSTR }}
+        dotnet pack --configuration Release -p:PackageVersion=${{ github.ref_name }} -o ../../artifacts
+        cd ../${{ env.NUGET_PACKAGE_NAME_CORE }}
+        dotnet pack --configuration Release -p:PackageVersion=${{ github.ref_name }} -o ../../artifacts
+        
+    - name: Publish to GitHub Packages
+      run: |
+        dotnet nuget push ./artifacts/*.nupkg \
+          --skip-duplicate \
+          --api-key ${{ secrets.GITHUB_TOKEN }} \
+          --source https://nuget.pkg.github.com/${{ env.GITHUB_OWNER }}/index.json

@@ -11,9 +11,12 @@
 		<PackageId>UnitDAL.SQL.Abstractions</PackageId>
 		<Version>1.0.0</Version>
 		<Authors>Yagudin Aleksandr</Authors>
+		<Company>Yagudin Aleksandr</Company>
+		<RepositoryType>git</RepositoryType>
 		<Description>Abstractions for UnitDAL database library</Description>
 		<PackageTags>database, repository, efcore</PackageTags>
 		<RepositoryUrl>https://github.com/YagudinAleksandr/UniDAL</RepositoryUrl>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(PackageId).xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

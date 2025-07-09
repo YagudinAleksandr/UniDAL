@@ -11,9 +11,12 @@
 		<PackageId>UnitDAL.SQL.Core</PackageId>
 		<Version>1.0.0</Version>
 		<Authors>Yagudin Aleksandr</Authors>
+		<Company>Yagudin Aleksandr</Company>
 		<Description>Core implementation of UnitDAL database library</Description>
 		<PackageTags>database, repository, efcore</PackageTags>
+		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/YagudinAleksandr/UniDAL</RepositoryUrl>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(PackageId).xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
