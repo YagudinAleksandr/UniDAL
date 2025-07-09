@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using UniDAL.SQL.Abstractions;
-using UniDAL.SQL.Abstractions.Factories;
 
 namespace UniDAL.SQL.Core.Factories
 {
