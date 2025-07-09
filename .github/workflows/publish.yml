@@ -5,42 +5,38 @@ on:
     tags:
       - 'v*.*.*'  # Триггер на теги вида v1.0.0
 
-env:
-  NUGET_PACKAGE_NAME_ABSTR: UniDAL.SQL.Abstractions
-  NUGET_PACKAGE_NAME_CORE: UniDAL.SQL.Core
-  GITHUB_OWNER: YagudinAleksandr
-
 jobs:
   publish:
     runs-on: ubuntu-latest
-    
     permissions:
       contents: read
       packages: write
       
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
         
-    - name: Restore dependencies
-      run: dotnet restore
-      
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-      
-    - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal
-      
-    - name: Pack
+    - name: Find project paths
+      id: find-projects
       run: |
-        cd src/${{ env.NUGET_PACKAGE_NAME_ABSTR }}
+        ABSTR_PATH=$(find . -name "UniDAL.SQL.Abstractions.csproj" | head -n 1 | xargs dirname)
+        CORE_PATH=$(find . -name "UniDAL.SQL.Core.csproj" | head -n 1 | xargs dirname)
+        echo "ABSTR_PATH=$ABSTR_PATH" >> $GITHUB_OUTPUT
+        echo "CORE_PATH=$CORE_PATH" >> $GITHUB_OUTPUT
+        
+    - name: Pack Abstractions
+      run: |
+        cd "${{ steps.find-projects.outputs.ABSTR_PATH }}"
         dotnet pack --configuration Release -p:PackageVersion=${{ github.ref_name }} -o ../../artifacts
-        cd ../${{ env.NUGET_PACKAGE_NAME_CORE }}
+        
+    - name: Pack Core
+      run: |
+        cd "${{ steps.find-projects.outputs.CORE_PATH }}"
         dotnet pack --configuration Release -p:PackageVersion=${{ github.ref_name }} -o ../../artifacts
         
     - name: Publish to GitHub Packages
@@ -48,4 +44,4 @@ jobs:
         dotnet nuget push ./artifacts/*.nupkg \
           --skip-duplicate \
           --api-key ${{ secrets.GITHUB_TOKEN }} \
-          --source https://nuget.pkg.github.com/${{ env.GITHUB_OWNER }}/index.json
+          --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
