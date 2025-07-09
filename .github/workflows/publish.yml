@@ -3,7 +3,7 @@
 on:
   push:
     tags:
-      - '*.*.*'  # Триггер на теги вида 1.0.0
+      - '*.*.*'
 
 jobs:
   publish:
@@ -11,34 +11,42 @@ jobs:
     permissions:
       contents: read
       packages: write
-      
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
-        
-    - name: Find project paths
-      id: find-projects
-      run: |
-        ABSTR_PATH=$(find . -name "UniDAL.SQL.Abstractions.csproj" | head -n 1 | xargs dirname)
-        CORE_PATH=$(find . -name "UniDAL.SQL.Core.csproj" | head -n 1 | xargs dirname)
-        echo "ABSTR_PATH=$ABSTR_PATH" >> $GITHUB_OUTPUT
-        echo "CORE_PATH=$CORE_PATH" >> $GITHUB_OUTPUT
-        
+
+    - name: Create artifacts directory
+      run: mkdir -p ./artifacts
+
     - name: Pack Abstractions
       run: |
-        cd "${{ steps.find-projects.outputs.ABSTR_PATH }}"
-        dotnet pack --configuration Release -p:PackageVersion=${{ github.ref_name }} -o ../../artifacts
-        
+        VERSION=${GITHUB_REF#refs/tags/v}
+        cd src/UniDAL.SQL.Abstractions
+        dotnet pack \
+          --configuration Release \
+          -p:PackageVersion=$VERSION \
+          -p:Version=$VERSION \
+          --output ../../artifacts
+
     - name: Pack Core
       run: |
-        cd "${{ steps.find-projects.outputs.CORE_PATH }}"
-        dotnet pack --configuration Release -p:PackageVersion=${{ github.ref_name }} -o ../../artifacts
-        
+        VERSION=${GITHUB_REF#refs/tags/v}
+        cd src/UniDAL.SQL.Core
+        dotnet pack \
+          --configuration Release \
+          -p:PackageVersion=$VERSION \
+          -p:Version=$VERSION \
+          --output ../../artifacts
+
+    - name: List artifacts (debug)
+      run: ls -la ./artifacts
+
     - name: Publish to GitHub Packages
       run: |
         dotnet nuget push ./artifacts/*.nupkg \
