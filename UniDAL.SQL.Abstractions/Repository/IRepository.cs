@@ -11,7 +11,7 @@
         /// Получить сущность по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор сущности</param>
-        Task<TEntity> GetByIdAsync(TKey id);
+        Task<TEntity?> GetByIdAsync(TKey id);
 
         /// <summary>
         /// Получить все сущности

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace UniDAL.SQL.Abstractions.Factories
+namespace UniDAL.SQL.Abstractions
 {
     /// <summary>
     /// Фабрика для создания экземпляров контекста БД
