@@ -26,7 +26,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.7" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.7" />
-		<PackageReference Include="UnitDAL.SQL.Abstractions" Version="1.0.0" />
+		<ProjectReference Include="..\UniDAL.SQL.Abstractions\UniDAL.SQL.Abstractions.csproj" />
 	</ItemGroup>
 
 </Project>
