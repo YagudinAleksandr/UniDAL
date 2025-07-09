@@ -1,32 +1,33 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using UniDAL.SQL.Abstractions;
 
 namespace UniDAL.SQL.Core
 {
     /// <summary>
-    /// Абстрактный контекст подключения к БД
+    /// Базовый класс контекста базы данных с поддержкой транзакций
     /// </summary>
-    public abstract class DatabaseContext : DbContext, IDisposable
+    public abstract class DatabaseContext : DbContext, IDatabaseContext
     {
-        /// <summary>
-        /// Транзакция
-        /// </summary>
-        private IDbContextTransaction? _transaction;
+        /// <inheritdoc cref="IDbContextTransaction"/>
+        private IDbContextTransaction _transaction;
 
+        /// <summary>
+        /// Конструктор контекста
+        /// </summary>
+        /// <param name="options">Настройки контекста</param>
         protected DatabaseContext(DbContextOptions options) : base(options) { }
 
         /// <summary>
-        /// Начало транзакции
+        /// Начать новую транзакцию
         /// </summary>
         public void BeginTransaction()
         {
             _transaction = Database.BeginTransaction();
         }
 
-        /// <summary>
-        /// Подтверждение транзакции
-        /// </summary>
-        public async Task Commit()
+        /// <inheritdoc/>
+        public async Task CommitAsync()
         {
             try
             {
@@ -45,10 +46,8 @@ namespace UniDAL.SQL.Core
             }
         }
 
-        /// <summary>
-        /// Откат транзакции
-        /// </summary>
-        public async Task Rollback()
+        /// <inheritdoc/>
+        public async Task RollbackAsync()
         {
             _transaction?.Rollback();
             await Task.CompletedTask;

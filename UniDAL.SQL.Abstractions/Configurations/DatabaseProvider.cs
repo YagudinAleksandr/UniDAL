@@ -1,18 +1,18 @@
 ﻿namespace UniDAL.SQL.Abstractions
 {
     /// <summary>
-    /// Провайдеры баз данных
+    /// Типы поддерживаемых реляционных СУБД
     /// </summary>
     public enum DatabaseProvider
     {
         /// <summary>
-        /// MS SQL сервер
+        /// Microsoft SQL Server 
         /// </summary>
-        SqlServer,
-
+        MSSQL,
+        
         /// <summary>
-        /// PostgreSQL сервер
+        /// PostgreSQL 
         /// </summary>
-        PostgreSQL
+        PostgreSQL,
     }
 }

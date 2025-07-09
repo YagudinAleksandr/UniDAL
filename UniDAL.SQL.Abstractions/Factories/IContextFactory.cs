@@ -3,16 +3,15 @@
 namespace UniDAL.SQL.Abstractions
 {
     /// <summary>
-    /// Фабрика контекстов
+    /// Фабрика для создания экземпляров контекста БД
     /// </summary>
     public interface IContextFactory
     {
         /// <summary>
-        /// Создание контекста
+        /// Создать экземпляр контекста БД
         /// </summary>
-        /// <typeparam name="TContext">Контекст</typeparam>
-        /// <param name="contextKey">Название контекста</param>
-        /// <returns>Контекст</returns>
+        /// <typeparam name="TContext">Тип контекста</typeparam>
+        /// <param name="contextKey">Ключ конфигурации из настроек</param>
         TContext Create<TContext>(string contextKey) where TContext : DbContext;
     }
 }
