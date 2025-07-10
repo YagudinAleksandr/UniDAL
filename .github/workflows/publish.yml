@@ -3,49 +3,59 @@
 on:
   push:
     tags:
-      - 'v*.*.*'  # Триггер на теги вида v1.0.0
-
-env:
-  NUGET_PACKAGE_NAME_ABSTR: UnitDAL.SQL.Abstractions
-  NUGET_PACKAGE_NAME_CORE: UnitDAL.SQL.Core
-  GITHUB_OWNER: YagudinAleksandr
+      - '*'
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    
     permissions:
       contents: read
       packages: write
-      
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
+    - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
-        
-    - name: Restore dependencies
-      run: dotnet restore
-      
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-      
-    - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal
-      
-    - name: Pack
+
+    - name: Clean and prepare
       run: |
-        cd src/${{ env.NUGET_PACKAGE_NAME_ABSTR }}
-        dotnet pack --configuration Release -p:PackageVersion=${{ github.ref_name }} -o ../../artifacts
-        cd ../${{ env.NUGET_PACKAGE_NAME_CORE }}
-        dotnet pack --configuration Release -p:PackageVersion=${{ github.ref_name }} -o ../../artifacts
-        
-    - name: Publish to GitHub Packages
+        mkdir -p ./artifacts
+        rm -rf ./artifacts/*
+
+    - name: Extract version
+      id: version
       run: |
-        dotnet nuget push ./artifacts/*.nupkg \
-          --skip-duplicate \
-          --api-key ${{ secrets.GITHUB_TOKEN }} \
-          --source https://nuget.pkg.github.com/${{ env.GITHUB_OWNER }}/index.json
+        VERSION=${GITHUB_REF#refs/tags/}
+        VERSION=${VERSION#v}  # Удаляем v если есть
+        echo "Version: $VERSION"
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Find and pack projects
+      run: |
+        for PROJ in $(find . -name "*.csproj" | grep -E "Abstractions|Core"); do
+          echo "Packing $PROJ"
+          dotnet pack $PROJ \
+            --configuration Release \
+            -p:PackageVersion=${{ steps.version.outputs.VERSION }} \
+            -p:Version=${{ steps.version.outputs.VERSION }} \
+            --output $(pwd)/artifacts
+        done
+
+    - name: Verify artifacts
+      run: |
+        echo "Artifacts:"
+        ls -la ./artifacts/
+        [ "$(ls -A ./artifacts)" ] || exit 1
+
+    - name: Publish packages
+      run: |
+        for PKG in ./artifacts/*.nupkg; do
+          echo "Publishing $PKG"
+          dotnet nuget push $PKG \
+            --skip-duplicate \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        done
