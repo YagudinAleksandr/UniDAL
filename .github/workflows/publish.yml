@@ -53,9 +53,19 @@ jobs:
     - name: Publish packages
       run: |
         for PKG in ./artifacts/*.nupkg; do
-          echo "Publishing $PKG"
+          echo "Publishing $PKG to GitHub Packages"
           dotnet nuget push $PKG \
             --skip-duplicate \
             --api-key ${{ secrets.GITHUB_TOKEN }} \
             --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        done
+
+    - name: Publish packages to NuGet.org
+      run: |
+        for PKG in ./artifacts/*.nupkg; do
+          echo "Publishing $PKG to NuGet.org"
+          dotnet nuget push $PKG \
+            --skip-duplicate \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json
         done
