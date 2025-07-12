@@ -6,7 +6,7 @@ namespace UniDAL.SQL.Core
     /// <summary>
     /// Реализация единицы работы (Unit of Work)
     /// </summary>
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         /// <inheritdoc cref="DbContext"/>
         protected readonly DbContext _context;
@@ -69,6 +69,10 @@ namespace UniDAL.SQL.Core
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Освобождение ресурсов
+        /// </summary>
+        /// <param name="disposing">Освободить объект</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed && disposing)
