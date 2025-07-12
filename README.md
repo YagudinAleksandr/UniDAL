@@ -8,14 +8,14 @@ UniDAL.SQL предоставляет унифицированный интер�
 ### Установка UniDAL.SQL
 ```bash
 dotnet add package UniDAL.SQL.Abstractions
-dotnet add package UniDAL.Core
+dotnet add package UniDAL.SQL.Core
 ```
 
 Или через NuGet Package Manager:
 
 ```bash
 Install-Package UniDAL.SQL.Abstractions
-Install-Package UniDAL.Core
+Install-Package UniDAL.SQL.Core
 ```
 
 #### Настройка

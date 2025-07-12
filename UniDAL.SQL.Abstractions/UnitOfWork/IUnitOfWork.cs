@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс единицы работы (Unit of Work)
     /// </summary>
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         /// <summary>
         /// Получить репозиторий для работы с сущностью
